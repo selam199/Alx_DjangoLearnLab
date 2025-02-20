@@ -1,37 +1,49 @@
 import os
 import django
 
-# Setup Django environment
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "LibraryProject.settings")
+# Set up Django environment
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'your_project_name.settings')
 django.setup()
 
 from relationship_app.models import Author, Book, Library, Librarian
 
-# Query all books by a specific author
+# Query 1: Query all books by a specific author
 def get_books_by_author(author_name):
-    author = Author.objects.filter(name=author_name).first()  # Ensure author exists
-    if author:
-        books = Book.objects.filter(author=author)  # ✅ Required Query
-        return books
-    return []
+    try:
+        author = Author.objects.get(name=author_name)
+        books = author.books.all()  # Using related_name 'books'
+        print(f"Books by {author_name}:")
+        for book in books:
+            print(f"- {book.title}")
+    except Author.DoesNotExist:
+        print(f"Author '{author_name}' not found.")
 
-# List all books in a specific library
+# Query 2: List all books in a library
 def get_books_in_library(library_name):
-    library = Library.objects.filter(name=library_name).first()
-    if library:
-        return library.books.all()  # ManyToMany relationship
-    return []
+    try:
+        library = Library.objects.get(name=library_name)
+        books = library.books.all()  # Using related_name 'books'
+        print(f"Books in {library_name}:")
+        for book in books:
+            print(f"- {book.title}")
+    except Library.DoesNotExist:
+        print(f"Library '{library_name}' not found.")
 
-# Retrieve the librarian for a library
+# Query 3: Retrieve the librarian for a library
 def get_librarian_for_library(library_name):
-    library = Library.objects.filter(name=library_name).first()
-    if library:
-        return Librarian.objects.filter(library=library).first()  # OneToOne relationship
-    return None
+    try:
+        library = Library.objects.get(name=library_name)
+        librarian = library.librarian  # Using related_name 'librarian'
+        print(f"Librarian for {library_name}: {librarian.name}")
+    except Library.DoesNotExist:
+        print(f"Library '{library_name}' not found.")
+    except Librarian.DoesNotExist:
+        print(f"No librarian found for {library_name}.")
 
-# Example usage (Testing the queries)
+# Run the queries
 if __name__ == "__main__":
-    print("Books by George Orwell:", list(get_books_by_author("George Orwell")))
-    print("Books in City Library:", list(get_books_in_library("City Library")))
-    print("Librarian of City Library:", get_librarian_for_library("City Library"))
+    # Example usage
+    get_books_by_author("J.K. Rowling")
+    get_books_in_library("Central Library")
+    get_librarian_for_library("Central Library")
 
