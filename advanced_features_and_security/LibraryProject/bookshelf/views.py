@@ -4,6 +4,9 @@ from django.contrib.auth.decorators import permission_required
 from .models import Book
 from django.forms import BookForm
 from django.contrib.auth.decorators import login_required
+# bookshelf/views.py
+from .forms import ExampleForm
+
 
 @permission_required('bookshelf.can_edit', raise_exception=True)
 def edit_book(request, book_id):
