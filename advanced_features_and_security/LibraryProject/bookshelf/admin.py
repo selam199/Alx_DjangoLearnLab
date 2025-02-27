@@ -2,6 +2,10 @@ from django.contrib import admin
 from .models import Book
 from django.contrib.auth.admin import UserAdmin
 from .models import CustomUser
+from django.contrib.auth.models import Group, Permission
+from django.db.models import Q
+
+
 
 # Customizing the admin interface for the Book model
 class BookAdmin(admin.ModelAdmin):
@@ -16,6 +20,26 @@ class BookAdmin(admin.ModelAdmin):
 
 # Register the Book model with the custom admin configuration
 admin.site.register(Book, BookAdmin)
+
+def create_groups_and_permissions():
+    # Create Groups
+    editors, created = Group.objects.get_or_create(name="Editors")
+    viewers, created = Group.objects.get_or_create(name="Viewers")
+    admins, created = Group.objects.get_or_create(name="Admins")
+
+    # Assign Permissions
+    can_view_permission = Permission.objects.get(codename='can_view')
+    can_create_permission = Permission.objects.get(codename='can_create')
+    can_edit_permission = Permission.objects.get(codename='can_edit')
+    can_delete_permission = Permission.objects.get(codename='can_delete')
+
+    # Assign permissions to groups
+    editors.permissions.set([can_view_permission, can_create_permission, can_edit_permission])
+    viewers.permissions.set([can_view_permission])
+    admins.permissions.set([can_view_permission, can_create_permission, can_edit_permission, can_delete_permission])
+
+# Call this function to set up the groups and permissions
+create_groups_and_permissions()
 
 
 class CustomUserAdmin(UserAdmin):
