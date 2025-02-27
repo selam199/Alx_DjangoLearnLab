@@ -163,3 +163,12 @@ CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'https://trusted-cdn.com')  # Example for trusted script sources
 CSP_STYLE_SRC = ("'self'", 'https://trusted-cdn.com')
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Enforce HTTPS redirection for all non-HTTPS requests
+SECURE_SSL_REDIRECT = True  # Redirect HTTP to HTTPS
+
+# Enable HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # One year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
