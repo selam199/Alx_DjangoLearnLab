@@ -139,6 +139,7 @@ AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 # Prevent browsers from interpreting files as a different MIME type
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
 
 # Prevent the site from being embedded in a frame (protect against clickjacking)
 X_FRAME_OPTIONS = 'DENY'
@@ -148,14 +149,17 @@ SECURE_BROWSER_XSS_FILTER = True
 # Ensure cookies are only sent over HTTPS
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
 
 # Redirect all HTTP connections to HTTPS
 SECURE_SSL_REDIRECT = True
 
 # Enforce secure connections for a specified duration (seconds)
 SECURE_HSTS_SECONDS = 31536000  # 1 year
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to subdomains as well
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True # Apply to subdomains as well
+SECURE_HSTS_PRELOAD = True
 
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", 'https://trusted-cdn.com')  # Example for trusted script sources
 CSP_STYLE_SRC = ("'self'", 'https://trusted-cdn.com')
+
