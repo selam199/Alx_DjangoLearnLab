@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-lk@1@5#45_%6v3(_!ck=6=+54zjxp2g26i1v4)f=a!qo$%=910'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'csp.middleware.CSPMiddleware',  # Add CSP middleware
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -135,3 +136,26 @@ LOGIN_REDIRECT_URL = "/"  # Redirect to homepage (Change if needed)
 LOGOUT_REDIRECT_URL = "/login/"  # Redirect to login page after logout
 
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
+
+# Prevent browsers from interpreting files as a different MIME type
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Prevent the site from being embedded in a frame (protect against clickjacking)
+X_FRAME_OPTIONS = 'DENY'
+
+# Enable the XSS filter in browsers
+SECURE_BROWSER_XSS_FILTER = True
+# Ensure cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# Redirect all HTTP connections to HTTPS
+SECURE_SSL_REDIRECT = True
+
+# Enforce secure connections for a specified duration (seconds)
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to subdomains as well
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted-cdn.com')  # Example for trusted script sources
+CSP_STYLE_SRC = ("'self'", 'https://trusted-cdn.com')
