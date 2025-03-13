@@ -9,6 +9,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from django_filters import rest_framework as filters
 from rest_framework import filters as drf_filters
 from django_filters import rest_framework as filters
+from django_filters.rest_framework import DjangoFilterBackend
 
 class BookListView(generics.ListCreateAPIView):
     """
@@ -18,7 +19,7 @@ class BookListView(generics.ListCreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]  # Read for all, Write for authenticated users
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter)
+    filter_backends = [DjangoFilterBackend, filters.OrderingFilter, filters.SearchFilter]
     filterset_fields = ['title', 'author', 'publication_year']  # Allow filtering by title, author, and publication_year
     search_fields = ['title', 'author']  # Enable search on title and author
     ordering_fields = ['title', 'publication_year']  # Allow ordering by title and publication year

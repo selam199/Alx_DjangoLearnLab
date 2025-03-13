@@ -45,3 +45,24 @@ The following fields can be used to filter books:
 - `publication_year`: Filter by the year the book was published.
 
 
+## Test Coverage
+The test cases verify the following functionalities:
+
+1. **CRUD Operations**
+   - Listing all books
+   - Retrieving a single book
+   - Creating a new book
+   - Updating an existing book
+   - Deleting a book
+
+2. **Advanced Querying**
+   - Filtering books by title
+   - Searching books by author
+   - Ordering books by publication year
+
+3. **Authentication and Permissions**
+   - Ensures only authenticated users can create, update, or delete books
+
+---
+This testing strategy ensures the robustness of your API and verifies that all endpoints function correctly. 🚀 Let me know if you need modifications! 😊
+
