@@ -21,3 +21,16 @@ This project demonstrates how to use Django REST Framework's generic views and c
 
 ### Delete a book (Authenticated users only)
 - `DELETE /api/books/<id>/`
+# Advanced API Project - Book CRUD Operations
+
+## Endpoints
+- **GET /books/** - Retrieve a list of all books.
+- **GET /books/<int:pk>/** - Retrieve a single book by its ID.
+- **POST /books/create/** - Create a new book (Authenticated users only).
+- **PUT /books/<int:pk>/update/** - Update an existing book (Authenticated users only).
+- **DELETE /books/<int:pk>/delete/** - Delete a book (Authenticated users only).
+
+## Permissions
+- `IsAuthenticatedOrReadOnly` - Allows unauthenticated users to view books but restricts modification.
+- `IsAuthenticated` - Requires authentication for modifying or deleting books.
+- `IsOwnerOrReadOnly` - Ensures only the owner of the book can modify or delete it.

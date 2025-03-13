@@ -4,7 +4,10 @@ import datetime
 
 class BookSerializer(serializers.ModelSerializer):
     """Serializer for Book model, validating publication year."""
-    
+    def validate_title(self, value):
+        if "badword" in value.lower():
+            raise serializers.ValidationError("Title contains inappropriate language.")
+        return value
     def validate_publication_year(self, value):
         if value > datetime.datetime.now().year:
             raise serializers.ValidationError("Publication year cannot be in the future.")

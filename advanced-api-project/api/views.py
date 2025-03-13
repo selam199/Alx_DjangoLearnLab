@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions
 from .models import Book
 from .serializers import BookSerializer
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 
 class BookListView(generics.ListCreateAPIView):
     """
@@ -20,3 +21,29 @@ class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsoOwnerOrReadOnly]
+
+# CreateView: Add a new book
+class BookCreateView(CreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Only authenticated users can create books
+    
+    def perform_create(self, serializer):
+        # Example of custom handling, e.g., setting the user who created the book
+        serializer.save(user=self.request.user)
+
+# UpdateView: Modify an existing book
+class BookUpdateView(UpdateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]  # Only authenticated users can update books
+    
+    def perform_update(self, serializer):
+        # Custom handling before saving the update
+        serializer.save(user=self.request.user)  # Example
+
+# DeleteView: Remove a book
+class BookDeleteView(DestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]  # Only authenticated users can delete books
