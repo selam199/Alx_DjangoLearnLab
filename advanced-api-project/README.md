@@ -34,3 +34,14 @@ This project demonstrates how to use Django REST Framework's generic views and c
 - `IsAuthenticatedOrReadOnly` - Allows unauthenticated users to view books but restricts modification.
 - `IsAuthenticated` - Requires authentication for modifying or deleting books.
 - `IsOwnerOrReadOnly` - Ensures only the owner of the book can modify or delete it.
+
+
+# API Enhancements: Filtering, Searching, and Ordering
+
+## Filtering
+The following fields can be used to filter books:
+- `title`: Filter by book title.
+- `author`: Filter by book author.
+- `publication_year`: Filter by the year the book was published.
+
+
