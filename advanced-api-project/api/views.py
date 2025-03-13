@@ -1,11 +1,15 @@
 from rest_framework import generics, permissions
+from django_filters import rest_framework
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-from django_filters import rest_framework
+from django_filters import rest_framework as filters
+from rest_framework import filters as drf_filters
+from django_filters import rest_framework as filters
+
 class BookListView(generics.ListCreateAPIView):
     """
     GET: Retrieve all books
