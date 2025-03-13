@@ -2,6 +2,7 @@ from rest_framework import generics, permissions
 from .models import Book
 from .serializers import BookSerializer
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView, UpdateAPIView, DestroyAPIView
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsoOwnerOrReadOnly
 
 class BookListView(generics.ListCreateAPIView):
     """
