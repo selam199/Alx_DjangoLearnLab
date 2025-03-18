@@ -49,6 +49,9 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+LOGIN_REDIRECT_URL = "profile"  # Redirect users to their profile after login
+LOGOUT_REDIRECT_URL = "login"   # Redirect to login after logout
+
 
 ROOT_URLCONF = 'django_blog.urls'
 
