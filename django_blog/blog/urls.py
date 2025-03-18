@@ -11,15 +11,16 @@ urlpatterns = [
     path('profile/update/', profile_update, name='profile_update'),
 
     # Comment URLs
-    # Create a new comment on a post
+    # Create a comment on a specific post
     path('posts/<int:post_id>/comments/new/', CommentCreateView.as_view(), name='add_comment'),
 
-    # Edit an existing comment
+    # Edit a specific comment
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='edit_comment'),
 
-    # Delete a comment
+    # Delete a specific comment
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete_comment'),
 ]
+
 
     
 
