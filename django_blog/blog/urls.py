@@ -1,5 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from .views import post_detail, edit_comment, delete_comment
 from . import views
 
 urlpatterns = [
@@ -9,4 +10,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('profile/update/', views.profile_update, name='profile_update'),
+    path('posts/<int:post_id>/', post_detail, name='post_detail'),
+    path('comments/<int:comment_id>/edit/', edit_comment, name='edit_comment'),
+    path('comments/<int:comment_id>/delete/', delete_comment, name='delete_comment'),
 ]
