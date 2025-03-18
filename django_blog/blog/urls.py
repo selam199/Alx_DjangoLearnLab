@@ -13,10 +13,11 @@ urlpatterns = [
     path('profile/update/', views.profile_update, name='profile_update'),
     
     path('posts/', views.CommentCreateView.as_view(), name='post-list'),
-    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='add_comment'),
     path("posts/<int:pk>/edit/", views.CommentUpdateView.as_view(), name='post-edit'),
     path("post/<int:pk>/delete/", views.CommentDeleteView.as_view(), name='post-delete'),
-
+    
+    
+    path('post/<int:pk>/comments/new/', CommentCreateView.as_view(), name='add_comment'),
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='edit_comment'),
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete_comment'),
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='edit_comment'),
