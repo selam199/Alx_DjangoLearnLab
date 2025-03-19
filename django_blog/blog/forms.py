@@ -24,7 +24,7 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
         
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(required=False, help_text="Comma-separated tags")
+    #tags = forms.CharField(required=False, help_text="Comma-separated tags")
     class Meta:
         model = Post
         fields = ["title", "content", "tags"]
