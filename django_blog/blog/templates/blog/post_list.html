@@ -1,0 +1,12 @@
+{% extends "blog/base.html" %}
+{% block content %}
+  <h2>All Blog Posts</h2>
+  {% for post in posts %}
+    <h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3>
+    <p>By {{ post.author }} | {{ post.created_at }}</p>
+    <p>{{ post.content|truncatewords:20 }}</p>
+  {% empty %}
+    <p>No posts yet.</p>
+  {% endfor %}
+  <a href="{% url 'post_create' %}">Create a new post</a>
+{% endblock %}
