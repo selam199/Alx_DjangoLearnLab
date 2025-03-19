@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User  # Importing the User model
+from taggit.managers import TaggableManager
 
 class Post(models.Model):
     # Title of the post, a character field with a maximum length of 200 characters
@@ -13,6 +14,8 @@ class Post(models.Model):
     
     # Foreign key to link each post to a user (author), assuming one user can have many posts
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts')
+    
+    tags = TaggableManager()  
 
     # Optional: Add a string representation for the model to return the title of the post
     def __str__(self):

@@ -7,7 +7,7 @@ from .views import (
     PostUpdateView, PostDeleteView
     # ... other view imports ...
 )
-from . views import register, profile, profile_update
+from . views import register, profile, profile_update,search_posts
 urlpatterns = [
     # Authentication and Profile URLs
     path('login/', auth_views.LoginView.as_view(template_name='blog/login.html'), name='login'),
@@ -29,6 +29,8 @@ urlpatterns = [
     path('post/new/', PostCreateView.as_view(), name='post-new'),
     path("posts/<int:pk>/edit/", PostUpdateView.as_view(), name="post_edit"),
     path("post/<int:pk>/comments/new/", CommentCreateView.as_view(), name='add_comment'),
+    path('search/', search_posts, name='search_posts'),
+    path('tags/<slug:tag_slug>/', PostListView.as_view(), name='posts_by_tag'),  # View posts by tag
     
     
     

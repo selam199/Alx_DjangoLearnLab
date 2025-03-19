@@ -23,6 +23,16 @@ class CommentForm(forms.ModelForm):
         fields = ['content']
         
 class PostForm(forms.ModelForm):
+    tags = forms.CharField(required=False, help_text="Comma-separated tags")
     class Meta:
         model = Post
         fields = ["title", "content"]
+        
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        tags = self.cleaned_data.get('tags')
+        if commit:
+            post.save()
+            if tags:
+                post.tags.set(*[tag.strip() for tag in tags.split(',')])
+        return post
