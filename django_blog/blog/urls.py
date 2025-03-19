@@ -17,8 +17,9 @@ urlpatterns = [
     path('profile/update/', profile_update, name='profile_update'),
     
     # Existing Comment URLs
-    path('posts/<int:post_id>/comments/new/', CommentCreateView.as_view(), name='add_comment'),
+    
     # Blog post URLs
+    path('posts/<int:post_id>/comments/new/', CommentCreateView.as_view(), name='add_comment'),
     path("posts/", PostListView.as_view(), name="post_list"),
     path("posts/<int:pk>/", PostDetailView.as_view(), name="post_detail"),
     path("posts/<int:pk>/edit/", PostUpdateView.as_view(), name="post_edit"),
@@ -27,7 +28,7 @@ urlpatterns = [
     path('post/new/', PostCreateView.as_view(), name='post-new'),
     
     
-    
+    path('posts/<int:post_id>/comments/new/', CommentCreateView.as_view(), name='add_comment'),
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='edit_comment'),
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='delete_comment'),
     path('comment/<int:pk>/update/', CommentUpdateView.as_view(), name='comment_update'),
