@@ -4,7 +4,7 @@ from .views import (
     CommentCreateView,
     CommentUpdateView,
     CommentDeleteView,PostListView, PostDetailView, PostCreateView,
-    PostUpdateView, PostDeleteView
+    PostUpdateView, PostDeleteView,PostByTagListView
     # ... other view imports ...
 )
 from . views import register, profile, profile_update,search_posts
@@ -32,7 +32,7 @@ urlpatterns = [
     path('search/', search_posts, name='search_posts'),
     path('tags/<slug:tag_slug>/', PostListView.as_view(), name='posts_by_tag'),  # View posts by tag
     
-    
+    path('tags/<slug:tag_name>/',PostByTagListView.as_view(), name='post_by_tag'),
     
     
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='edit_comment'),
