@@ -20,10 +20,13 @@ urlpatterns = [
     
     # Blog post URLs
     path("posts/", PostListView.as_view(), name="post_list"),
-    path("posts/new/", PostCreateView.as_view(), name="post_new"),
     path("posts/<int:pk>/", PostDetailView.as_view(), name="post_detail"),
-    path("posts/<int:pk>/update/", PostUpdateView.as_view(), name="post_update"),
-    path("posts/<int:pk>/delete/", PostDeleteView.as_view(), name="post_delete"),
+    # path("posts/<int:pk>/update/", PostUpdateView.as_view(), name="post_update"),
+    # path("posts/<int:pk>/delete/", PostDeleteView.as_view(), name="post_delete"),
+    # path("posts/new/", PostCreateView.as_view(), name="post_new"),
+    path('post/<int:pk>/delete/', PostDeleteView.as_view(), name='post-delete'),
+    path('post/<int:pk>/update/', PostUpdateView.as_view(), name='post-update'),
+    path('post/new/', PostCreateView.as_view(), name='post-new'),
     path("posts/<int:pk>/edit/", PostUpdateView.as_view(), name="post_edit"),
     path("post/<int:pk>/comments/new/", CommentCreateView.as_view(), name='add_comment'),
     
