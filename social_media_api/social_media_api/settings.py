@@ -23,9 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-#zqlz7fss6m9!diyfh*7p0&g=9@ioy-h)_gx_b79&cplagbl-w'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['socialmediaapi.com', 'www.socialmediaapi.com', '35.180.45.210']
 
 
 # Application definition
@@ -93,6 +93,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'social_media_api.wsgi.application'
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_SSL_REDIRECT = True
+
+# Static files
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Media files
+MEDIA_URL = '/media/'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+
+
 
 
 # Database
@@ -100,11 +116,14 @@ WSGI_APPLICATION = 'social_media_api.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'peace',
+        'USER': 'root',
+        'PASSWORD': '1S2e3l4a5m6#',
+        'HOST': '127.0.0.1',  # Can be a URL like db-name.xxxxxx.us-east-1.rds.amazonaws.com
+        'PORT': '3306',  # Typically 5432 for PostgreSQL
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
