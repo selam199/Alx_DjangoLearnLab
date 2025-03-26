@@ -7,6 +7,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from django.contrib.auth import get_user_model
 from .serializers import RegisterSerializer, UserSerializer, LoginSerializer, ProfileSerializer
+from django.shortcuts import get_object_or_404
+from .models import CustomUser
+from posts.models import Post
+from posts.serializers import PostSerializer
+
 
 User = get_user_model()
 
@@ -68,3 +73,45 @@ class ProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class FollowUserView(APIView):
+        permission_classes = [IsAuthenticated]
+        def post(self, request, user_id):
+            user_to_follow = get_object_or_404(CustomUser, id=user_id)
+        
+            if request.user == user_to_follow:
+                return Response(
+                {"error": "You cannot follow yourself"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+            request.user.following.add(user_to_follow)
+            return Response(
+                {"message": f"You are now following {user_to_follow.username}"},
+            status=status.HTTP_200_OK
+        )
+
+class UnfollowUserView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
+        request.user.following.remove(user_to_unfollow)
+        return Response(
+            {"message": f"You have unfollowed {user_to_unfollow.username}"},
+            status=status.HTTP_200_OK
+        )
+        
+class UserFeedView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        # Get posts from users the current user follows
+        followed_users = request.user.following.all()
+        feed_posts = Post.objects.filter(
+            author__in=followed_users
+        ).order_by('-created_at')
+        
+        serializer = PostSerializer(feed_posts, many=True)
+        return Response(serializer.data)
