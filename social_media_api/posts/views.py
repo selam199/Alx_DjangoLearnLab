@@ -9,23 +9,8 @@ from .serializers import (
     CommentSerializer,
     CommentCreateSerializer
 )
-from django.contrib.auth import get_user_model
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
-User = get_user_model()
-
-
-from rest_framework import viewsets, permissions, status
-from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
-from .models import Post, Comment
-from .serializers import (
-    PostSerializer,
-    PostCreateSerializer,
-    CommentSerializer,
-    CommentCreateSerializer
-)
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -99,7 +84,7 @@ class PostViewSet(viewsets.ModelViewSet):
 class CommentViewSet(viewsets.ModelViewSet):
     #  Viewset for Comment CRUD operations.
     
-    queryset = Post.objects.all().order_by('-created_at')
+    queryset = Comment.objects.all().order_by('-created_at')
     serializer_class = CommentSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
 
