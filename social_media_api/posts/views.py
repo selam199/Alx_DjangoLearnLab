@@ -14,6 +14,8 @@ from rest_framework import filters
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
 from rest_framework.request import Request
+from .models import Post, Like, Comment
+from notifications.models import Notification
 
 User = get_user_model()
 
@@ -30,8 +32,54 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.author == request.user
 
 class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    
+    
+    @action(detail=True, methods=['post'])
+    def like(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        # Get or create like
+        like, created = Like.objects.get_or_create(
+            user=user,
+            post=post
+        )
+
+        if not created:
+            return Response(
+                {"detail": "You already liked this post."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            # Create notification if it's not the user's own post
+        if post.author != user:
+            Notification.objects.create(
+                recipient=post.author,
+                actor=user,
+                verb="liked your post",
+                target=post
+            )
+
+        return Response({"status": "Post liked."}, status=status.HTTP_201_CREATED)
+    @action(detail=True, methods=['post'])
+    def unlike(self, request, pk=None):
+        post = get_object_or_404(Post, pk=pk)
+        user = request.user
+
+        try:
+            like = Like.objects.get(user=user, post=post)
+            like.delete()
+            return Response({"status": "Post unliked."}, status=status.HTTP_200_OK)
+        except Like.DoesNotExist:
+            return Response(
+                {"detail": "You haven't liked this post yet."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
 
     def get_queryset(self):
         """
