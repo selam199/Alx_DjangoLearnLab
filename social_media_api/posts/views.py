@@ -13,7 +13,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions
-from rest_framework.response import request
+from rest_framework.request import Request
 
 User = get_user_model()
 
@@ -30,13 +30,18 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         return obj.author == request.user
 
 class PostViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for Post CRUD operations.
-    """
-    following_users = request.user.following.all()
-    queryset = Post.objects.filter(author__in=following_users).order_by
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        """
+        Returns posts from users that the authenticated user is following.
+        """
+        user = self.request.user
+        if user.is_authenticated:
+            following_users = user.following.all()
+            return Post.objects.filter(author__in=following_users).order_by('-created_at')
+        return Post.objects.none()  # Return empty queryset for unauthenticated users
     
     # Add filter backends
     filter_backends = [

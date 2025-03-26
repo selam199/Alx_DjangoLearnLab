@@ -21,4 +21,5 @@ urlpatterns = [
     path('posts/user_posts/', PostViewSet.as_view({'get': 'user_posts'}), name='user-posts'),
     
      path('feed/', UserFeedView.as_view(), name='user-feed'),
+ 
 ]
