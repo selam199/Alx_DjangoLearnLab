@@ -36,10 +36,22 @@ class ProfileSerializer(serializers.ModelSerializer):
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(style={'input_type': 'password'})
+    email = serializers.CharField()
 
-    def validate(self, data):
-        user = authenticate(username=data['username'], password=data['password'])
-        if not user:
-            raise serializers.ValidationError("Invalid credentials")
-        data['user'] = user
-        return data
+    def validate(self, attrs):
+        username = attrs.get('username')
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        if username and password:
+            user = authenticate(
+                request=self.context.get('request'),
+                username=username,
+                password=password,
+                email = email
+            )
+            if not user:
+                raise serializers.ValidationError("Unable to log in with provided credentials.")
+            attrs['user'] = user
+            return attrs
+        raise serializers.ValidationError("Must include username and password.")

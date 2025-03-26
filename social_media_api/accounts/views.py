@@ -23,17 +23,20 @@ class RegisterView(APIView):
                             status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class LoginAPIView(APIView):
+class LoginView(APIView):
     """
     Handles user authentication and token retrieval
     """
+    permission_classes = [AllowAny]
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.validated_data
+            user = serializer.validated_data['user']
             token, created = Token.objects.get_or_create(user=user)
             return Response({
-                'user': UserSerializer(user).data,
+                'user_id': user.id,  # Using numeric ID here
+                'username': user.username,
+                'email': user.email,
                 'token': token.key
             })
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -49,7 +52,7 @@ class ProfileView(APIView):
     """
     Handles user profile retrieval and updates
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
     def get(self, request):
         serializer = UserSerializer(request.user)
