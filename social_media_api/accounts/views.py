@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404
 from .models import CustomUser
 from posts.models import Post
 from posts.serializers import PostSerializer
+from rest_framework import generics, permissions
 
 
 User = get_user_model()
@@ -75,9 +76,12 @@ class ProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
-class FollowUserView(APIView):
-        permission_classes = [IsAuthenticated]
-        def post(self, request, user_id):
+class FollowUserView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    
+
+    def post(self, request, user_id):
             user_to_follow = get_object_or_404(CustomUser, id=user_id)
         
             if request.user == user_to_follow:
@@ -92,8 +96,9 @@ class FollowUserView(APIView):
             status=status.HTTP_200_OK
         )
 
-class UnfollowUserView(APIView):
-    permission_classes = [IsAuthenticated]
+class UnfollowUserView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request, user_id):
         user_to_unfollow = get_object_or_404(CustomUser, id=user_id)
@@ -103,8 +108,9 @@ class UnfollowUserView(APIView):
             status=status.HTTP_200_OK
         )
         
-class UserFeedView(APIView):
-    permission_classes = [AllowAny]
+class UserFeedView(generics.GenericAPIView):
+    queryset = CustomUser.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
         # Get posts from users the current user follows
