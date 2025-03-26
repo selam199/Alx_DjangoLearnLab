@@ -16,6 +16,7 @@ from rest_framework import generics, permissions,status
 from rest_framework.request import Request
 from .models import Post, Like, Comment
 from notifications.models import Notification
+from notifications.serializers import NotificationSerializer
 
 User = get_user_model()
 
@@ -37,21 +38,20 @@ class PostViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
-        post = get_object_or_404(Post, pk=pk)
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({"detail": "Post not found."}, status=status.HTTP_404_NOT_FOUND)
+        
         user = request.user
 
-        # Get or create like
-        like, created = Like.objects.get_or_create(
-            user=user,
-            post=post
-        )
+        if like:
+            return Response({"detail": "You already liked this post."}, status=status.HTTP_400_BAD_REQUEST)
 
-        if not created:
-            return Response(
-                {"detail": "You already liked this post."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-            # Create notification if it's not the user's own post
+        # Create like
+        Like.objects.create(user=user, post=post)
+
+        # Create notification if it's not the user's own post
         if post.author != user:
             Notification.objects.create(
                 recipient=post.author,
