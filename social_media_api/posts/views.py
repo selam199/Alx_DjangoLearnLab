@@ -12,7 +12,7 @@ from .serializers import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.contrib.auth import get_user_model
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions,status
 from rest_framework.request import Request
 from .models import Post, Like, Comment
 from notifications.models import Notification
@@ -35,8 +35,6 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all().order_by('-created_at')
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    
-    
     @action(detail=True, methods=['post'])
     def like(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
@@ -63,7 +61,15 @@ class PostViewSet(viewsets.ModelViewSet):
             )
 
         return Response({"status": "Post liked."}, status=status.HTTP_201_CREATED)
-    @action(detail=True, methods=['post'])
+    
+    @action(detail=False, methods=['get'])
+    def notifications(self, request):
+        """
+        Fetch user notifications.
+        """
+        notifications = Notification.objects.filter(recipient=request.user).order_by('-timestamp')
+        serializer = NotificationSerializer(notifications, many=True)
+        return Response(serializer.data)
     def unlike(self, request, pk=None):
         post = get_object_or_404(Post, pk=pk)
         user = request.user
