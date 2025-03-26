@@ -97,9 +97,12 @@ class PostViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 class CommentViewSet(viewsets.ModelViewSet):
-    """
-    Viewset for Comment CRUD operations.
-    """
+    #  Viewset for Comment CRUD operations.
+    
+    queryset = Post.objects.all().order_by('-created_at')
+    serializer_class = CommentSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
     # Add pagination and filtering
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['created_at']
