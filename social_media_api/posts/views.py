@@ -12,6 +12,8 @@ from .serializers import (
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from django.contrib.auth import get_user_model
+from rest_framework import generics, permissions
+from rest_framework.response import request
 
 User = get_user_model()
 
@@ -31,7 +33,8 @@ class PostViewSet(viewsets.ModelViewSet):
     """
     Viewset for Post CRUD operations.
     """
-    queryset = Post.objects.all().order_by('-created_at')
+    following_users = request.user.following.all()
+    queryset = Post.objects.filter(author__in=following_users).order_by
     serializer_class = PostSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
     
